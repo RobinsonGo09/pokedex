@@ -1,24 +1,14 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Stack>
+      {/* Oculta el header para la pantalla principal (index.tsx) */}
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      {/* Oculta el header para todas las rutas dentro de la carpeta pokedex */}
+      <Stack.Screen name="pokedex" options={{ headerShown: false }} />
+      {/* Si tienes una pantalla de detalles específica, asegúrate también de que tenga headerShown: false */}
+      <Stack.Screen name="pokedex/details" options={{ headerShown: false }} />
+    </Stack>
   );
 }
