@@ -1,75 +1,29 @@
-import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Link } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function PokedexScannerScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
-  const [isCameraActive, setIsCameraActive] = useState(false);
-
-  useEffect(() => {
-    if (!permission?.granted) {
-      requestPermission();
-    }
-  }, [permission]);
-
-  if (!permission) { return <View />; }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>Necesitamos tu permiso para usar la cámara.</Text>
-        <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
-          <Text style={styles.permissionButtonText}>Conceder Permiso</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-
-  const toggleCamera = () => {
-    setIsCameraActive(prevState => !prevState);
-  };
-
+export default function WelcomeScreen() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.cameraLens} />
-        <View style={styles.indicatorLights}>
-          <View style={[styles.light, { backgroundColor: '#DE362C' }]} />
-          <View style={[styles.light, { backgroundColor: '#F5E52B' }]} />
-          <View style={[styles.light, { backgroundColor: '#50AF5D' }]} />
+      {/* --- INICIO DE LA POKÉBOLA DIBUJADA CON CÓDIGO --- */}
+      <View style={styles.pokeball}>
+        <View style={styles.topHalf} />
+        <View style={styles.bottomHalf} />
+        <View style={styles.centerBand} />
+        <View style={styles.centerButtonOuter}>
+          <View style={styles.centerButtonInner} />
         </View>
       </View>
+      {/* --- FIN DE LA POKÉBOLA --- */}
+
+      <Text style={styles.title}>Bienvenido al Mundo Pokémon</Text>
+      <Text style={styles.subtitle}>Tu Pokédex personal te espera.</Text>
       
-      <Text style={styles.title}>Pokédex</Text>
-
-      <View style={styles.screenFrame}>
-        {isCameraActive ? (
-          <CameraView style={styles.cameraPreview} facing='back'>
-            <View style={styles.scannerOverlay}>
-               <Text style={styles.scannerText}>Escaneando...</Text>
-            </View>
-          </CameraView>
-        ) : (
-          <View style={styles.placeholderScreen}>
-            <Text style={styles.placeholderText}>Cámara desactivada</Text>
-          </View>
-        )}
-      </View>
-
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.customButton} onPress={toggleCamera}>
-          <Text style={styles.buttonText}>
-            {isCameraActive ? 'Detener' : 'Escanear'}
-          </Text>
+      <Link href="/login" asChild>
+        <TouchableOpacity style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>Inicia Sesión para Continuar</Text>
         </TouchableOpacity>
-
-        {/* --- CORRECCIÓN DEL BOTÓN "ACTIVAR POKÉDEX" --- */}
-        {/* Aplicamos el estilo directamente al Link y quitamos el TouchableOpacity anidado */}
-        <Link href="/pokedex" style={[styles.customButton, styles.greenButton]}>
-          <Text style={styles.buttonText}>Activar Pokédex</Text>
-        </Link>
-      </View>
+      </Link>
     </View>
   );
 }
@@ -77,100 +31,100 @@ export default function PokedexScannerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EE1515',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0D1F2D', // Un azul noche oscuro
     padding: 20,
-    // --- CORRECCIÓN DE ESPACIOS VERTICALES ---
-    // Cambiamos 'space-between' por 'space-around' para un espaciado más equilibrado
-    justifyContent: 'space-around',
-    borderWidth: 10,
-    borderColor: '#C40D0D',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    // Quitamos el paddingTop para que se ajuste con space-around
-  },
-  title: {
-    fontSize: 55,
-    fontWeight: 'bold',
-    color: '#FFCC00',
-    textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: { width: 3, height: 3 },
-    textShadowRadius: 10,
-    alignSelf: 'center',
-    // Ajustamos los márgenes para controlar la posición
-    marginTop: -10,
-    marginBottom: 5,
-  },
-  cameraLens: {
-    width: 70,
-    height: 70,
-    backgroundColor: '#3D7DCA',
-    borderRadius: 35,
+  // --- Estilos para dibujar la Pokébda ---
+  pokeball: {
+    width: 180,
+    height: 180,
+    borderRadius: 90, // Círculo perfecto
     borderWidth: 6,
-    borderColor: '#fff',
+    borderColor: '#000',
+    backgroundColor: '#fff', // El fondo es la parte blanca
+    overflow: 'hidden', // Oculta lo que se salga del círculo
+    marginBottom: 40,
+    position: 'relative', // Para posicionar los elementos internos
   },
-  indicatorLights: {
-    flexDirection: 'row',
-    marginLeft: 20,
-    gap: 10,
-  },
-  light: {
-    width: 25,
-    height: 25,
-    borderRadius: 12.5,
-    borderWidth: 2,
-    borderColor: 'rgba(0,0,0,0.2)',
-  },
-  screenFrame: {
+  topHalf: {
     width: '100%',
-    height: '45%', // Aumentamos la altura un poco
-    backgroundColor: '#DEDEDE',
-    borderRadius: 20,
-    padding: 15,
-    borderBottomRightRadius: 60,
+    height: '50%',
+    backgroundColor: '#EE1515', // Rojo Pokédex
+  },
+  bottomHalf: {
+    width: '100%',
+    height: '50%',
+    backgroundColor: '#fff', // Blanco Pokédex
+  },
+  centerBand: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+    height: 18, // Grosor de la banda negra
+    backgroundColor: '#000',
+    transform: [{ translateY: -9 }], // Centra la banda verticalmente
+    zIndex: 1,
+  },
+  centerButtonOuter: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#fff',
+    borderWidth: 6,
+    borderColor: '#000',
+    transform: [{ translateX: -30 }, { translateY: -30 }], // Centra el botón
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
+    zIndex: 2,
   },
-  cameraPreview: { width: '100%', height: '100%', borderRadius: 10 },
-  placeholderScreen: { width: '100%', height: '100%', borderRadius: 10, backgroundColor: '#333', justifyContent: 'center', alignItems: 'center' },
-  placeholderText: { color: '#888', fontSize: 18, fontWeight: '500' },
-  scannerOverlay: { position: 'absolute', bottom: 10, left: 10, backgroundColor: 'rgba(0,0,0,0.4)', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 5 },
-  scannerText: { color: '#00FF00', fontSize: 14, fontFamily: 'monospace' },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    // Quitamos el paddingBottom para que se ajuste con space-around
-  },
-  customButton: {
-    width: '45%',
-    paddingVertical: 18,
+  centerButtonInner: {
+    width: 30,
+    height: 30,
     borderRadius: 15,
-    backgroundColor: '#3D7DCA',
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.30,
-    shadowRadius: 4.65,
-    elevation: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#000',
   },
-  greenButton: {
-    backgroundColor: '#50AF5D',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
+  // --- Fin de estilos de la Pokébda ---
+  title: {
+    fontSize: 32,
     fontWeight: 'bold',
+    color: '#FFCC00', // Amarillo Pokémon
     textAlign: 'center',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
   },
-  permissionContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#333', padding: 20 },
-  permissionText: { color: 'white', fontSize: 18, textAlign: 'center', marginBottom: 20 },
-  permissionButton: { backgroundColor: '#EE1515', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 10 },
-  permissionButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
+  subtitle: {
+    fontSize: 18,
+    color: '#d3d3d3', // Un gris más claro
+    textAlign: 'center',
+    marginBottom: 60,
+  },
+  loginButton: {
+    backgroundColor: '#333',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 30,
+    borderWidth: 3,
+    borderColor: '#f0ededff', // Borde amarillo
+    shadowColor: '#fd0202ff',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  loginButtonText: {
+    color: '#e70b0bff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });

@@ -26,7 +26,7 @@ export default function PokedexViewerScreen() {
   const handleNext = () => setCurrentIndex((prev) => (prev + 1) % pokemonList.length);
   const handlePrevious = () => setCurrentIndex((prev) => (prev - 1 + pokemonList.length) % pokemonList.length);
   const handleSearch = () => { if (!searchText) return; const term = searchText.toLowerCase().trim(); const foundIndex = pokemonList.findIndex(p => p.name === term || (pokemonList.indexOf(p) + 1).toString() === term); if (foundIndex !== -1) { setCurrentIndex(foundIndex); } else { alert('Pokémon no encontrado'); } setSearchText(''); };
-  const handleViewDetails = () => { if (currentPokemon) { router.push({ pathname: '/pokedex/details', params: { name: currentPokemon.name } }); } };
+  const handleViewDetails = () => { if (currentPokemon) { router.push({ pathname: '/details', params: { name: currentPokemon.name } }); } };
   const animatedScreenStyle = useAnimatedStyle(() => ({ backgroundColor: backgroundColor.value }));
 
   return (
